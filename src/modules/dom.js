@@ -23,22 +23,58 @@ const DOMController = (() => {
     const activeProject = AppController.getActiveProject();
 
     projects.forEach((project) => {
-      const projectButton = document.createElement("button");
+      const projectItem = document.createElement("div");
 
-      projectButton.classList.add("project-item");
-      projectButton.textContent = project.name;
-      projectButton.dataset.projectId = project.id;
+      projectItem.classList.add("project-item");
 
       if (activeProject && project.id === activeProject.id) {
-        projectButton.classList.add("active");
+        projectItem.classList.add("active");
       }
 
-      projectButton.addEventListener("click", () => {
+      projectItem.innerHTML = `
+        <span class="project-name">${project.name}</span>
+
+        ${
+          project.name !== "Default"
+            ? `
+                <button class="delete-project-btn" aria-label="Delete project">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M10 11v6"/>
+                    <path d="M14 11v6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                    <path d="M3 6h18"/>
+                    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+                </button>
+            `
+            : ""
+        }
+        `;
+      const projectName = projectItem.querySelector(".project-name");
+      const deleteBtn = projectItem.querySelector(".delete-project-btn");
+
+      projectName.addEventListener("click", () => {
         AppController.setActiveProject(project.id);
         render();
       });
 
-      projectsList.appendChild(projectButton);
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", () => {
+          AppController.deleteProject(project.id);
+          render();
+        });
+      }
+      projectsList.appendChild(projectItem);
     });
   };
 
