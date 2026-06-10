@@ -30,6 +30,25 @@
           <button id="new-todo-btn">+ New Todo</button>
         </header>
 
+        <form id="todo-form" class="todo-form hidden">
+          <input id="todo-title-input" type="text" placeholder="Title" />
+
+          <textarea
+            id="todo-description-input"
+            placeholder="Description"
+          ></textarea>
+
+          <input id="todo-date-input" type="date" />
+
+          <select id="todo-priority-input">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+
+          <button type="submit">Create Todo</button>
+        </form>
+
         <section id="todos-list"></section>
       </main>
     </div>

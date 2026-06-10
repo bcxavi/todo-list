@@ -7,6 +7,14 @@ const DOMController = (() => {
   const projectForm = document.querySelector("#project-form");
   const projectNameInput = document.querySelector("#project-name-input");
   const newProjectBtn = document.querySelector("#new-project-btn");
+  const newTodoBtn = document.querySelector("#new-todo-btn");
+  const todoForm = document.querySelector("#todo-form");
+  const todoTitleInput = document.querySelector("#todo-title-input");
+  const todoDescriptionInput = document.querySelector(
+    "#todo-description-input",
+  );
+  const todoDateInput = document.querySelector("#todo-date-input");
+  const todoPriorityInput = document.querySelector("#todo-priority-input");
 
   const renderProjects = () => {
     projectsList.innerHTML = "";
@@ -96,6 +104,28 @@ const DOMController = (() => {
 
       projectForm.reset();
       projectForm.classList.add("hidden");
+    });
+
+    newTodoBtn.addEventListener("click", () => {
+      todoForm.classList.toggle("hidden");
+    });
+
+    todoForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const title = todoTitleInput.value.trim();
+      const description = todoDescriptionInput.value.trim();
+      const dueDate = todoDateInput.value;
+      const priority = todoPriorityInput.value;
+
+      if (!title) return;
+
+      AppController.createTodo(title, description, dueDate, priority);
+
+      render();
+
+      todoForm.reset();
+      todoForm.classList.add("hidden");
     });
   };
   const render = () => {
