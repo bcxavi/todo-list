@@ -4,6 +4,9 @@ const DOMController = (() => {
   const projectsList = document.querySelector("#projects-list");
   const projectTitle = document.querySelector("#project-title");
   const todosList = document.querySelector("#todos-list");
+  const projectForm = document.querySelector("#project-form");
+  const projectNameInput = document.querySelector("#project-name-input");
+  const newProjectBtn = document.querySelector("#new-project-btn");
 
   const renderProjects = () => {
     projectsList.innerHTML = "";
@@ -21,6 +24,11 @@ const DOMController = (() => {
       if (activeProject && project.id === activeProject.id) {
         projectButton.classList.add("active");
       }
+
+      projectButton.addEventListener("click", () => {
+        AppController.setActiveProject(project.id);
+        render();
+      });
 
       projectsList.appendChild(projectButton);
     });
@@ -49,18 +57,47 @@ const DOMController = (() => {
       todoCard.classList.add("todo-card");
 
       todoCard.innerHTML = `
-        <input type="checkbox" ${todo.completed ? "checked" : ""} />
+        <input type="checkbox" class="todo-checkbox" data-todo-id="${todo.id}" ${todo.completed ? "checked" : ""} />
         <div>
           <h3>${todo.title}</h3>
           <p>${todo.description}</p>
         </div>
         <span>${todo.dueDate}</span>
       `;
+      const checkbox = todoCard.querySelector(".todo-checkbox");
+
+      checkbox.addEventListener("change", () => {
+        AppController.toggleTodo(todo.id);
+
+        render();
+      });
 
       todosList.appendChild(todoCard);
     });
   };
 
+  const bindEvents = () => {
+    newProjectBtn.addEventListener("click", () => {
+      projectForm.classList.toggle("hidden");
+    });
+
+    projectForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const projectName = projectNameInput.value.trim();
+
+      if (!projectName) return;
+
+      const project = AppController.createProject(projectName);
+
+      AppController.setActiveProject(project.id);
+
+      render();
+
+      projectForm.reset();
+      projectForm.classList.add("hidden");
+    });
+  };
   const render = () => {
     renderProjects();
     renderProjectTitle();
@@ -69,6 +106,7 @@ const DOMController = (() => {
 
   return {
     render,
+    bindEvents,
   };
 })();
 
