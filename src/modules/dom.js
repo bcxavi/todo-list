@@ -65,18 +65,35 @@ const DOMController = (() => {
       todoCard.classList.add("todo-card");
 
       todoCard.innerHTML = `
-        <input type="checkbox" class="todo-checkbox" data-todo-id="${todo.id}" ${todo.completed ? "checked" : ""} />
+        <input 
+            type="checkbox" 
+            class="todo-checkbox" 
+            data-todo-id="${todo.id}" 
+            ${todo.completed ? "checked" : ""} 
+        />
+
         <div>
-          <h3>${todo.title}</h3>
-          <p>${todo.description}</p>
+            <h3>${todo.title}</h3>
+            <p>${todo.description}</p>
         </div>
+
         <span>${todo.dueDate}</span>
-      `;
+
+        <button class="delete-todo-btn" data-todo-id="${todo.id}">
+            Delete
+        </button>
+        `;
       const checkbox = todoCard.querySelector(".todo-checkbox");
+      const deleteBtn = todoCard.querySelector(".delete-todo-btn");
 
       checkbox.addEventListener("change", () => {
         AppController.toggleTodo(todo.id);
 
+        render();
+      });
+
+      deleteBtn.addEventListener("click", () => {
+        AppController.deleteTodo(todo.id);
         render();
       });
 
