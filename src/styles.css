@@ -2,55 +2,92 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #f7f2ea;
+  --sidebar: #18181b;
+  --sidebar-muted: #a1a1aa;
+  --panel: #fffaf3;
+  --card: #ffffff;
+  --text: #272018;
+  --muted: #7c6f64;
+  --border: #e7dccf;
+  --accent: #d97706;
+  --accent-dark: #b45309;
+  --danger: #b91c1c;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at top right, #fed7aa 0, transparent 32%), var(--bg);
+  color: var(--text);
 }
 
 #app {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 290px 1fr;
   min-height: 100vh;
 }
 
 /* SIDEBAR */
 
 .sidebar {
-  padding: 24px;
-  background-color: #f4f4f5;
-  border-right: 1px solid #d4d4d8;
+  padding: 28px 22px;
+  background: linear-gradient(180deg, #27272a 0%, #18181b 45%, #111113 100%);
+  color: #fafafa;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .sidebar h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 1.75rem;
+  letter-spacing: -0.04em;
+}
+
+.sidebar h1::after {
+  content: ".";
+  color: var(--accent);
 }
 
 #new-project-btn,
 #new-todo-btn {
   border: none;
-  border-radius: 8px;
-  padding: 12px 16px;
+  border-radius: 999px;
+  padding: 11px 16px;
 
   cursor: pointer;
 
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
 
-  background-color: #2563eb;
-  color: white;
-
-  transition: background-color 0.2s;
+  transition:
+    transform 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-#new-project-btn:hover,
-#new-todo-btn:hover {
-  background-color: #1d4ed8;
+#new-project-btn {
+  width: 100%;
+  background-color: #fafafa;
+  color: #18181b;
+}
+
+#new-project-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
 #projects-list {
@@ -59,50 +96,110 @@ body {
   gap: 8px;
 }
 
-/* Más adelante cada proyecto tendrá esta clase */
 .project-item {
-  padding: 12px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 14px;
   cursor: pointer;
+
+  color: var(--sidebar-muted);
+  font-weight: 600;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
 }
 
 .project-item:hover {
-  background-color: #e4e4e7;
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fafafa;
+  transform: translateX(3px);
+}
+
+.project-item.active {
+  background-color: rgba(217, 119, 6, 0.18);
+  color: #fed7aa;
 }
 
 /* MAIN */
 
 .main-content {
-  padding: 32px;
+  padding: 42px;
+  background-color: rgba(255, 250, 243, 0.72);
+  backdrop-filter: blur(18px);
 
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
 }
 
 .project-header h2 {
   margin: 0;
-  font-size: 2rem;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+#new-todo-btn {
+  background-color: var(--accent);
+  color: white;
+  box-shadow: 0 12px 28px rgba(217, 119, 6, 0.28);
+}
+
+#new-todo-btn:hover {
+  background-color: var(--accent-dark);
+  transform: translateY(-1px);
 }
 
 #todos-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  display: grid;
+  gap: 14px;
 }
 
 /* Más adelante cada todo tendrá esta clase */
+
 .todo-card {
-  padding: 16px;
+  position: relative;
 
-  border: 1px solid #d4d4d8;
-  border-radius: 10px;
+  padding: 18px 20px 18px 24px;
 
-  background-color: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background-color: var(--card);
+  box-shadow: 0 14px 35px rgba(39, 32, 24, 0.06);
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.todo-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 16px;
+  bottom: 16px;
+  width: 4px;
+  border-radius: 999px;
+  background-color: var(--accent);
+}
+
+.todo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(39, 32, 24, 0.1);
 }
