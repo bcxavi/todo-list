@@ -1,15 +1,25 @@
 import Project from "./project";
 import Todo from "./todo";
+import { saveData, loadData } from "./storage";
 
 const AppController = (() => {
   const projects = [];
   let activeProjectId = null;
+
+  const save = () => {
+    saveData({
+      projects,
+      activeProjectId,
+    });
+  };
 
   const createDefaultProject = () => {
     const defaultProject = new Project("Default");
 
     projects.push(defaultProject);
     activeProjectId = defaultProject.id;
+
+    save();
   };
 
   const getProjects = () => projects;
@@ -20,12 +30,15 @@ const AppController = (() => {
 
   const setActiveProject = (projectId) => {
     activeProjectId = projectId;
+    save();
   };
 
   const createProject = (name) => {
     const project = new Project(name);
 
     projects.push(project);
+
+    save();
 
     return project;
   };
@@ -42,6 +55,7 @@ const AppController = (() => {
     if (activeProjectId === projectId) {
       activeProjectId = projects[0]?.id || null;
     }
+    save();
   };
 
   const createTodo = (title, description, dueDate, priority) => {
@@ -52,6 +66,7 @@ const AppController = (() => {
     const todo = new Todo(title, description, dueDate, priority);
 
     activeProject.addTodo(todo);
+    save();
 
     return todo;
   };
@@ -62,6 +77,7 @@ const AppController = (() => {
     if (!activeProject) return;
 
     activeProject.removeTodo(todoId);
+    save();
   };
 
   const toggleTodo = (todoId) => {
@@ -74,9 +90,26 @@ const AppController = (() => {
     if (!todo) return;
 
     todo.toggleCompleted();
+    save();
   };
 
-  createDefaultProject();
+  const init = () => {
+    const savedData = loadData();
+
+    if (savedData) {
+      savedData.projects.forEach((projectData) => {
+        projects.push(Project.fromData(projectData));
+      });
+
+      activeProjectId = savedData.activeProjectId;
+
+      return;
+    }
+
+    createDefaultProject();
+  };
+
+  init();
 
   return {
     getProjects,

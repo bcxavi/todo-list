@@ -1,3 +1,5 @@
+import Todo from "./todo";
+
 export default class Project {
   constructor(name) {
     this.id = crypto.randomUUID();
@@ -19,5 +21,13 @@ export default class Project {
 
   updateName(newName) {
     this.name = newName;
+  }
+  static fromData(data) {
+    const project = new Project(data.name);
+
+    project.id = data.id;
+    project.todos = data.todos.map((todo) => Todo.fromData(todo));
+
+    return project;
   }
 }
